@@ -15,7 +15,10 @@ import os
 import requests
 from io import BytesIO
 
-from models.ResNet_Cancer import model3
+# from models.ResNet_Cancer import model3
+
+from models.ResNet_Cancer_new import load_resnet
+model3 = load_resnet()
 
 # Функция для загрузки изображения из URL
 def load_image_from_url(url):
@@ -54,6 +57,9 @@ if image:  # Если изображение успешно загружено
     image_tensor = transform(image).unsqueeze(0)
     dict = {0:'Benign', 1:'Malignant'}
     output = model3(image_tensor).sigmoid().round() 
-    st.write(f"This image likely contains a: {dict[output.item()]}")
+    predicted_class = torch.argmax(output).item()
+    # st.write(f"Predicted class: {dict[output.item()]}")
+    st.write(f"Predicted class: {dict[predicted_class]}")
+    # st.write(f"This image likely contains a: {dict[output.item()]}")
 else:
     st.write("Пожалуйста, загрузите изображение или предоставьте URL.")

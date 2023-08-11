@@ -16,14 +16,19 @@ import requests
 from io import BytesIO
 
 # from models.model_test import model2
-from models.ResNet18_v1 import model2
+# from models.ResNet18_v1 import 
+from models.resnetv1 import load_resnet
+model2 = load_resnet()
+# print(resnet)
+# checkpoint = torch.load('models/catcpu_dog_resnet18_weights.pt')
+# model2.load_state_dict(checkpoint)
 
 # print(os.system('pwd'))
 
-model_path = '../models/cat_dog_resnet18_weights.pt'
-# model_path = 'cat_dog_resnet18_weights.pt'
+# model_path = '/models/cat_dog_resnet18_weights.pt'
+# # model_path = 'cat_dog_resnet18_weights.pt'
 
-model2.load_state_dict(torch.load(model_path, map_location='cpu'))
+# model2.load_state_dict(torch.load(model_path, map_location='cpu'))
 # model2 = model2.to(device='cpu')
 
 
@@ -76,6 +81,8 @@ if image:  # Если изображение успешно загружено
     image_tensor = transform(image).unsqueeze(0)
     dict = {0:'cat', 1:'dog'}
     output = model2(image_tensor).sigmoid().round() 
-    st.write(f"Predicted class: {dict[output.item()]}")
+    predicted_class = torch.argmax(output).item()
+    # st.write(f"Predicted class: {dict[output.item()]}")
+    st.write(f"Predicted class: {dict[predicted_class]}")
 else:
     st.write("Пожалуйста, загрузите изображение или предоставьте URL.")
