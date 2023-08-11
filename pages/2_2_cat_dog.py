@@ -3,32 +3,33 @@ import torchvision.transforms as transforms
 from PIL import Image
 import torch
 from torchvision import models
-
-import torch
-
-import torchvision
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from torchvision import transforms as T
-from torchvision import io
 import torchutils as tu
 import json
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-
-from PIL import Image
 import requests
 from io import BytesIO
 
-#модели
-from models.model_test import model2
-from torchvision.models import inception_v3
+# from models.model_test import model2
+from models.ResNet18_v1 import model2
 
-model = inception_v3(pretrained=True)
-model2.load_state_dict(torch.load('models/model-test-cat_dog.pt', map_location=torch.device('cpu')))
-    
+# print(os.system('pwd'))
+
+model_path = '../models/cat_dog_resnet18_weights.pt'
+# model_path = 'cat_dog_resnet18_weights.pt'
+
+model2.load_state_dict(torch.load(model_path, map_location='cpu'))
+# model2 = model2.to(device='cpu')
+
+
+# checkpoint = torch.load('models/catcpu_dog_resnet18_weights.pt')
+# model2.load_state_dict(checkpoint)
+
 # функции
 # Функция для загрузки изображения из URL
 def load_image_from_url(url):
@@ -36,19 +37,10 @@ def load_image_from_url(url):
     img_data = BytesIO(response.content)
     return Image.open(img_data)
 
-# Получение класса изображения
-def predict_image_class(url):
-    with torch.no_grad():
-        image = load_image_from_url(url)
-        outputs = model(image)
-        _, predicted_class = outputs.max(1)  # Получаем класс с максимальной вероятностью
-        class_name = labels[predicted_class.item()]
-        return class_name
-
-# # image = load_image_from_url(url)
 # # Получение класса изображения
-# def predict_image_class(image):
+# def predict_image_class(url):
 #     with torch.no_grad():
+#         image = load_image_from_url(url)
 #         outputs = model(image)
 #         _, predicted_class = outputs.max(1)  # Получаем класс с максимальной вероятностью
 #         class_name = labels[predicted_class.item()]
@@ -75,13 +67,15 @@ if image:  # Если изображение успешно загружено
     model2.eval()
 
     transform = transforms.Compose([
-        transforms.Resize((224, 224)),
+        transforms.Resize((256, 256)),
+        transforms.CenterCrop(224),
         transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
 
     image_tensor = transform(image).unsqueeze(0)
     dict = {0:'cat', 1:'dog'}
-    output = model2(image_tensor).sigmoid().round()
+    output = model2(image_tensor).sigmoid().round() 
     st.write(f"Predicted class: {dict[output.item()]}")
 else:
     st.write("Пожалуйста, загрузите изображение или предоставьте URL.")

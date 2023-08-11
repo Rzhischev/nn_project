@@ -13,7 +13,8 @@ model.fc = nn.Linear(num_features, 2)  # Замена последнего сл�
 model = model.to(device)
 
 # 2. Загрузка сохраненных весов
-model.load_state_dict(torch.load('cat_dog_resnet18_weights.pt', map_location=device))
+model.load_state_dict(torch.load('cat_dog_resnet18_weights.pt', map_location=device)) #model-test-cat_dog
+model2=model
 model.eval()
 
 # 3. Препроцессинг изображений

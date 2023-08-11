@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
 import requests
@@ -24,6 +25,7 @@ model = model.to(device)
 
 # Загрузка весов модели
 model.load_state_dict(torch.load('skin_cancer_resnet50_weights.pt'))
+model3=model
 model.eval()  # Установка модели в режим инференса
 
 # Функция для классификации изображений из URL

@@ -1,4 +1,5 @@
 import torch
+
 import torchvision
 import torch.nn as nn
 from torch.utils.data import DataLoader
@@ -11,9 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print(device)
-
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# print(device)
 
 from torchvision.models import mobilenet_v3_small, MobileNet_V3_Small_Weights, inception_v3
 model = mobilenet_v3_small(weights=MobileNet_V3_Small_Weights.DEFAULT)
