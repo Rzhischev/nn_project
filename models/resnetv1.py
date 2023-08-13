@@ -49,6 +49,7 @@ def predict_from_url(url, model):
         _, predicted = torch.max(output, 1)
         return 'Cat' if predicted.item() == 0 else 'Dog'
 
+
 # Тестирование
 url = "https://s0.rbk.ru/v6_top_pics/media/img/4/97/756723916815974.webp"
 resnet = load_resnet()
